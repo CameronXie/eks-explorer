@@ -1,0 +1,11 @@
+apiVersion: v2
+name: kube-prometheus
+description: Manages kube-prometheus deployment
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+dependencies:
+  - name: kube-prometheus-stack
+    repository: https://prometheus-community.github.io/helm-charts
+    version: ">=77.2.0 <78.0.0"

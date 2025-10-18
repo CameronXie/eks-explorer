@@ -1,0 +1,150 @@
+# Global configuration
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://github.com/CameronXie/eks-explorer.git
+    targetRevision: HEAD
+
+# Injected by Terraform
+environment: ""
+
+s3:
+  loki: {}
+  mimir: {}
+  tempo: {}
+
+# Individual applications configuration
+applications:
+  cert-manager:
+    enabled: true
+    project: cluster-addons
+    namespace: cert-manager
+    path: bootstrap/addons/cert-manager
+    annotations:
+      argocd.argoproj.io/sync-wave: "1"
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+
+  metrics-server:
+    enabled: true
+    project: cluster-addons
+    namespace: kube-system
+    path: bootstrap/addons/metrics-server
+    annotations:
+      argocd.argoproj.io/sync-wave: "2"
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+
+  kube-prometheus:
+    enabled: true
+    project: cluster-addons
+    namespace: observability
+    path: bootstrap/addons/kube-prometheus
+    annotations:
+      argocd.argoproj.io/sync-wave: "10"
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true
+
+  mimir-distributed:
+    enabled: true
+    customTemplate: true
+    project: cluster-addons
+    namespace: observability
+    path: bootstrap/addons/mimir-distributed
+    annotations:
+      argocd.argoproj.io/sync-wave: "20"
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true
+
+  loki:
+    enabled: true
+    customTemplate: true
+    project: cluster-addons
+    namespace: observability
+    path: bootstrap/addons/loki
+    annotations:
+      argocd.argoproj.io/sync-wave: "20"
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+
+  tempo-distributed:
+    enabled: true
+    customTemplate: true
+    project: cluster-addons
+    namespace: observability
+    path: bootstrap/addons/tempo-distributed
+    annotations:
+      argocd.argoproj.io/sync-wave: "20"
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+
+  opentelemetry-operator:
+    enabled: true
+    project: cluster-addons
+    namespace: observability
+    path: bootstrap/addons/opentelemetry-operator
+    annotations:
+      argocd.argoproj.io/sync-wave: "30"
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true
+        - ApplyOutOfSyncOnly=true
+
+  grafana:
+    enabled: true
+    project: cluster-addons
+    namespace: observability
+    path: bootstrap/addons/grafana
+    annotations:
+      argocd.argoproj.io/sync-wave: "40"
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+        - ApplyOutOfSyncOnly=true
+
+  argo-cd:
+    enabled: true
+    project: argocd
+    namespace: argocd
+    path: bootstrap/addons/argo-cd
+    annotations:
+      argocd.argoproj.io/sync-wave: "100"
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true

@@ -1,0 +1,13 @@
+{{- if (index .Values.applications "tempo-distributed").enabled -}}
+{{ include "bootstrap.application" (dict
+  "name" "tempo-distributed"
+  "app" (index .Values.applications "tempo-distributed")
+  "root" .
+  "helm" (dict
+    "valueFiles" (list (printf "../../../environments/%s/bootstrap/addons/tempo-distributed.yaml" .Values.environment))
+    "parameters" (list
+      (dict "name" "tempo-distributed.tempo.structuredConfig.storage.trace.s3.bucket" "value" (index .Values.s3.tempo "trace"))
+    )
+  )
+) }}
+{{- end }}

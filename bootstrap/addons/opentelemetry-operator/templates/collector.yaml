@@ -1,0 +1,31 @@
+{{- if .Values.createCollector }}
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: {{ .Values.collector.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: otel-collector
+    chart: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  mode: {{ .Values.collector.mode | default "deployment" }}
+  {{- if eq (.Values.collector.mode | default "deployment") "deployment" }}
+  replicas: {{ .Values.collector.replicas | default 2 }}
+  {{- end }}
+  serviceAccount: {{ .Values.collector.serviceAccount | default "otel-collector" }}
+  image: {{ .Values.collector.image | default "otel/opentelemetry-collector-contrib:0.95.0" }}
+  resources:
+    {{ toYaml .Values.collector.resources | nindent 4 }}
+  config:
+    {{- $configContent := .Files.Get "config/collector-config.yaml" }}
+    {{- if $configContent }}
+    {{ tpl $configContent . | nindent 4 }}
+    {{- else }}
+    {{ fail "Config file config/collector-config.yaml not found" }}
+    {{- end }}
+{{- end }}

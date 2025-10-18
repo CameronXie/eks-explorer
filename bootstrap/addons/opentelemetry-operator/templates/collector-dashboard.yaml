@@ -1,0 +1,12 @@
+{{- if .Values.createCollector }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.collector.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    grafana_dashboard: "true"
+data:
+  collector-dashboard.json: |-
+  {{ .Files.Get "config/collector-dashboard.json" | nindent 4 }}
+{{- end }}

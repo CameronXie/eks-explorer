@@ -1,0 +1,16 @@
+{{- if .Values.applications.loki.enabled }}
+---
+{{ include "bootstrap.application" (dict
+  "name" "loki"
+  "app" .Values.applications.loki
+  "root" .
+  "helm" (dict
+    "valueFiles" (list (printf "../../../environments/%s/bootstrap/addons/loki.yaml" .Values.environment))
+    "parameters" (list
+      (dict "name" "loki.loki.storage.bucketNames.chunks" "value" (index .Values.s3.loki "chunks"))
+      (dict "name" "loki.loki.storage.bucketNames.ruler" "value" (index .Values.s3.loki "ruler"))
+      (dict "name" "loki.loki.storage.bucketNames.admin" "value" (index .Values.s3.loki "admin"))
+    )
+  )
+) }}
+{{- end }}

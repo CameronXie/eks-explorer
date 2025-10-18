@@ -1,0 +1,11 @@
+apiVersion: v2
+name: opentelemetry-operator
+description: Manages opentelemetry-operator deployment
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+dependencies:
+  - name: opentelemetry-operator
+    repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+    version: ">=0.93.0 <1.0.0"

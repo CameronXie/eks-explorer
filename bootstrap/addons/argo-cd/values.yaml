@@ -1,0 +1,58 @@
+dashboards:
+  enabled: true
+
+argo-cd:
+  controller:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        relabelings:
+          - sourceLabels: [__address__]
+            targetLabel: job
+            replacement: argocd-metrics
+            action: replace
+
+  redis:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        relabelings:
+          - sourceLabels: [__address__]
+            targetLabel: job
+            replacement: argocd-redis-metrics
+            action: replace
+
+  server:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        relabelings:
+          - sourceLabels: [__address__]
+            targetLabel: job
+            replacement: argocd-server-metrics
+            action: replace
+
+  repoServer:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        relabelings:
+          - sourceLabels: [__address__]
+            targetLabel: job
+            replacement: argocd-repo-server-metrics
+            action: replace
+
+  applicationSet:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        relabelings:
+          - sourceLabels: [__address__]
+            targetLabel: job
+            replacement: argocd-applicationset-controller-metrics
+            action: replace

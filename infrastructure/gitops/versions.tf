@@ -1,0 +1,20 @@
+terraform {
+  required_version = ">= 1.9"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.15.0"
+    }
+
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.38.0"
+    }
+
+    argocd = {
+      source  = "argoproj-labs/argocd"
+      version = "~> 7.11.0"
+    }
+  }
+}

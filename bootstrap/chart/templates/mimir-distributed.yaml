@@ -1,0 +1,14 @@
+{{- if (index .Values.applications "mimir-distributed").enabled -}}
+{{ include "bootstrap.application" (dict
+  "name" "mimir-distributed"
+  "app" (index .Values.applications "mimir-distributed")
+  "root" .
+  "helm" (dict
+    "valueFiles" (list (printf "../../../environments/%s/bootstrap/addons/mimir-distributed.yaml" .Values.environment))
+    "parameters" (list
+      (dict "name" "mimir-distributed.mimir.structuredConfig.blocks_storage.s3.bucket_name" "value" (index .Values.s3.mimir "blocks"))
+      (dict "name" "mimir-distributed.mimir.structuredConfig.ruler_storage.s3.bucket_name" "value" (index .Values.s3.mimir "ruler"))
+    )
+  )
+) }}
+{{- end }}

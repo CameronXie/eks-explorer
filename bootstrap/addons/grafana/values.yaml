@@ -1,0 +1,58 @@
+grafana:
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 200m
+      memory: 512Mi
+
+  serviceAccount:
+    create: true
+    name: grafana-sa
+
+  persistence:
+    enabled: false
+
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: "true"
+      searchNamespace: ALL
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Tempo
+          uid: tempo
+          type: tempo
+          url: http://tempo-distributed-gateway.observability.svc.cluster.local
+          access: proxy
+          isDefault: false
+          editable: true
+          jsonData:
+            tracesToLogsV2:
+              datasourceUid: loki
+            lokiSearch:
+              datasourceUid: loki
+            tracesToMetrics:
+              datasourceUid: mimir
+            serviceMap:
+              datasourceUid: mimir
+        - name: Mimir
+          uid: mimir
+          type: prometheus
+          url: http://mimir-distributed-gateway.observability.svc.cluster.local/prometheus
+          isDefault: true
+          editable: true
+        - name: Loki
+          uid: loki
+          type: loki
+          url: http://loki-gateway.observability.svc.cluster.local
+          access: proxy
+          isDefault: false
+          editable: true
+

@@ -1,0 +1,11 @@
+{{- if .Values.dashboards.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-argocd-dashboard" .Release.Name }}
+  labels:
+    grafana_dashboard: "true"
+data:
+  argocd-dashboard.json: |-
+  {{ (.Files.Get "config/argocd-dashboard.json") | nindent 4 }}
+{{- end }}

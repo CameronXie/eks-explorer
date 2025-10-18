@@ -1,0 +1,10 @@
+{{- range $name, $app := .Values.applications }}
+{{- if and $app.enabled (not $app.customTemplate) }}
+---
+{{ include "bootstrap.application" (dict
+  "name" $name
+  "app" $app
+  "root" $
+) }}
+{{- end }}
+{{- end }}

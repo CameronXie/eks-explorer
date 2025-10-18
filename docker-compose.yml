@@ -1,0 +1,16 @@
+services:
+  dev:
+    container_name: eks_explorer_dev
+    build:
+      context: docker/dev
+    platform: linux/amd64
+    volumes:
+      - './:/usr/code'
+    working_dir: '/usr/code'
+    env_file:
+      - .env
+    command: [ '/bin/sh', '-c', 'sleep infinity' ]
+    restart: always
+    ports:
+      - "3000:3000"
+      - "8080:8080"

@@ -1,0 +1,65 @@
+mimir-distributed:
+
+  minio:
+    enabled: false
+
+  enterprise:
+    enabled: false
+
+  runtimeConfig:
+    overrides:
+      anonymous:
+        ingestion_rate: 100000
+        ingestion_burst_size: 1000000
+
+  mimir:
+    structuredConfig:
+      multitenancy_enabled: false
+      usage_stats:
+        enabled: false
+      blocks_storage:
+        backend: s3
+        s3:
+          endpoint: s3.us-east-1.amazonaws.com
+          region: us-east-1
+          insecure: false
+      ruler_storage:
+        backend: s3
+        s3:
+          endpoint: s3.us-east-1.amazonaws.com
+          region: us-east-1
+          insecure: false
+      limits:
+        ingestion_rate: 50000
+        ingestion_burst_size: 200000
+        max_global_series_per_user: 300000
+        out_of_order_time_window: 10m
+
+  serviceAccount:
+    create: true
+    name: mimir-sa
+
+  nginx:
+    enabled: false
+
+  gateway:
+    enabled: true
+    enabledNonEnterprise: true
+
+  ruler:
+    enabled: true
+
+  alertmanager:
+    enabled: false
+
+  metaMonitoring:
+    dashboards:
+      enabled: true
+      labels:
+        grafana_dashboard: "true"
+    serviceMonitor:
+      enabled: true
+    prometheusRule:
+      enabled: true
+      mimirAlerts: true
+      mimirRules: true

@@ -1,0 +1,115 @@
+tempo-distributed:
+  minio:
+    enabled: false
+
+  serviceAccount:
+    create: true
+    name: tempo-sa
+
+  tempo:
+    structuredConfig:
+      metrics_generator:
+        registry:
+          collection_interval: 60s
+        storage:
+          remote_write:
+            - url: http://mimir-distributed-distributor.observability.svc.cluster.local:8080/api/v1/push
+
+      storage:
+        trace:
+          backend: s3
+          s3:
+            endpoint: s3.us-east-1.amazonaws.com
+            insecure: false
+
+      overrides:
+        defaults:
+          metrics_generator:
+            processors:
+              - span-metrics
+              - service-graphs
+              - local-blocks
+
+      compactor:
+        compaction:
+          block_retention: 24h
+
+  traces:
+    otlp:
+      grpc:
+        enabled: true
+      http:
+        enabled: true
+
+  distributor:
+    replicas: 1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  ingester:
+    replicas: 1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    config:
+      replication_factor: 1
+    persistence:
+      enabled: true
+      storageClass: gp3
+      size: 2Gi
+
+  compactor:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  querier:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  queryFrontend:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  gateway:
+    enabled: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  metricsGenerator:
+    enabled: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
